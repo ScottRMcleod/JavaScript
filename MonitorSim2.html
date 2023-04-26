@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #333;
+  color: #fff;
+}
+
+header {
+  background-color: #2b2b2b;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  display: flex;
+  justify-content: flex-end;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin-left: 20px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+}
+
+.chart {
+  background-color: #2b2b2b;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.chart h2 {
+  margin-top: 0;
+  font-size: 24px;
+  font-weight
+bold;
+color: #fff;
+}
+
+.chart canvas {
+width: 100%;
+height: 300px;
+}
+
+.table {
+background-color: #2b2b2b;
+padding: 20px;
+border-radius: 5px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.table h2 {
+margin-top: 0;
+font-size: 24px;
+font-weight: bold;
+color: #fff;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+}
+
+thead {
+background-color: #444;
+color: #fff;
+}
+
+thead th {
+padding: 10px;
+text-align: left;
+}
+
+tbody tr:nth-child(even) {
+background-color: #555;
+}
+
+tbody td {
+padding: 10px;
+}
+
+footer {
+background-color: #2b2b2b;
+padding: 10px;
+text-align: center;
+}
+
+footer p {
+margin: 0;
+font-size: 14px;
+}
+
+/* Example animation for flashing points */
+.flashing-point {
+position: absolute;
+border-radius: 50%;
+width: 10px;
+height: 10px;
+background-color: #fff;
+animation: flashing 1s ease-in-out infinite;
+}
+
+@keyframes flashing {
+0% {
+opacity: 1;
+}
+50% {
+opacity: 0.5;
+}
+100% {
+opacity: 1;
+}
+}
+#traffic {
+  height: 200px;
+  overflow-y: scroll;
+  background-color: black;
+  color: white;
+  font-family: monospace;
+  font-size: 12px;
+}
+</style>
+  <meta charset="UTF-8">
+  <title>SolarWinds Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>SolarWinds Admin Panel</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Alerts</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section class="chart">
+      <h2>Network Traffic</h2>
+<div id="traffic">
+
+  <pre id="traffic-text">
+<script>
+const trafficText = document.getElementById('traffic-text');
+
+function addTraffic(text) {
+  trafficText.innerHTML += text + '\n';
+  traffic.scrollTop = traffic.scrollHeight;
+}
+
+// Example usage:
+addTraffic('12:34:56.789 192.168.0.1 -> 8.8.8.8 TCP SYN');
+addTraffic('12:34:57.012 8.8.8.8 -> 192.168.0.1 TCP SYN/ACK');
+addTraffic('12:34:57.123 192.168.0.1 -> 8.8.8.8 TCP ACK');
+addTraffic('12:34:57.234 192.168.0.1 -> 8.8.8.8 HTTP GET');
+
+function generateTraffic() {
+  const ips = ['192.168.0.1', '8.8.8.8', '10.0.0.1', '172.16.0.1'];
+  const protocols = ['TCP', 'UDP', 'ICMP', 'HTTP'];
+  const flags = ['SYN', 'ACK', 'FIN', 'RST'];
+  
+  const sourceIp = ips[Math.floor(Math.random() * ips.length)];
+  const destIp = ips[Math.floor(Math.random() * ips.length)];
+  const protocol = protocols[Math.floor(Math.random() * protocols.length)];
+  const flag = flags[Math.floor(Math.random() * flags.length)];
+  
+  const time = new Date().toISOString().replace('T', ' ').replace('Z', '');
+  
+  const text = `${time} ${sourceIp} -> ${destIp} ${protocol} ${flag}\n`;
+  trafficText.innerHTML += text;
+  traffic.scrollTop = traffic.scrollHeight;
+}
+
+setInterval(generateTraffic, 1000);
+	</script>
+</pre>
+</div>
+      <canvas id="network-chart">
+</canvas>
+    </section>
+
+    <section class="table">
+      <h2>Devices</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>IP Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Router 1</td>
+            <td>Router</td>
+            <td>Online</td>
+            <td>192.168.1.1</td>
+          </tr>
+          <tr>
+            <td>Switch 1</td>
+            <td>Switch</td>
+            <td>Offline</td>
+            <td>192.168.1.2</td>
+          </tr>
+          <!-- more devices here -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2023 SolarWinds Inc.</p>
+  </footer>
+  <script>
+// Define the data for the network traffic chart
+const data = {
+  labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+  datasets: [{
+    label: 'Incoming Traffic',
+    data: [43000, 35000, 55000, 48000, 52000],
+    borderColor: '#2ecc71',
+    borderWidth: 2,
+    fill: false
+  }, {
+    label: 'Outgoing Traffic',
+    data: [38000, 43000, 37000, 49000, 41000],
+    borderColor: '#e74c3c',
+    borderWidth: 2,
+    fill: false
+  }]
+};
+
+// Define the options for the network traffic chart
+const options = {
+  legend: {
+    display: true,
+    position: 'bottom',
+    labels: {
+      fontColor: '#fff',
+      fontSize: 14,
+      padding: 20
+    }
+  },
+  scales: {
+    xAxes: [{
+      ticks: {
+        fontColor: '#fff',
+        fontSize: 14,
+        padding: 20
+      },
+      gridLines: {
+        color: '#444',
+        zeroLineColor: '#444'
+      }
+    }],
+    yAxes: [{
+      ticks: {
+        fontColor: '#fff',
+        fontSize: 14,
+        padding: 20
+      },
+      gridLines: {
+        color: '#444',
+        zeroLineColor: '#444'
+      }
+    }]
+  }
+};
+
+// Get the canvas element for the network traffic chart
+const chartCanvas = document.getElementById('chart');
+
+// Create a new Chart.js instance for the network traffic chart
+const chart = new Chart(chartCanvas, {
+  type: 'line',
+  data: data,
+  options: options
+});
+
+// Define a function to simulate incoming network traffic data
+function simulateIncomingTraffic() {
+  // Generate a random value for the incoming traffic data
+  const value = Math.floor(Math.random() * 100000);
+
+  // Update the incoming traffic data in the chart
+  chart.data.datasets[0].data.push(value);
+
+  // Remove the oldest data point if the chart has more than 5 data points
+  if (chart.data.datasets[0].data.length > 5) {
+    chart.data.datasets[0].data.shift();
+  }
+
+  // Update the chart
+  chart.update();
+
+  // Add a flashing point to the map to indicate the new traffic
+  const flashingPoint = document.createElement('div');
+  flashingPoint.classList.add('flashing-point');
+  const map = document.getElementById('map');
+  map.appendChild(flashingPoint);
+
+  // Set a timeout to remove the flashing point after 1 second
+  setTimeout(() => {
+    map.removeChild(flashingPoint);
+  }, 1000);
+
+  // Set a timeout to simulate incoming traffic data again in 2 seconds
+  setTimeout(simulateIncomingTraffic, 2000);
+}
+
+// Call the simulateIncomingTraffic function to start simulating incoming traffic data
+simulateIncomingTraffic();
+
+</script>
+</body>
+</html>
