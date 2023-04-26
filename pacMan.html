@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pacman Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #000;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const playerSize = 10;
+        let playerX, playerY;
+        const playerSpeed = 2;
+        let playerLives;
+        let score;
+        let gameover;
+        let level;
+        const coins = [];
+        const ghosts = [];
+
+        function initializeGame() {
+            playerX = canvas.width / 2;
+            playerY = canvas.height - 30;
+            playerLives = 3;
+            score = 0;
+            gameover = false;
+            level = 1;
+
+            for (let i = 0; i < 5; i++) {
+                coins.push({
+                    x: Math.random() * (canvas.width - 20) + 10,
+                    y: Math.random() * (canvas.height - 20) + 10,
+                    size: 5,
+                    isCollected: false
+                });
+            }
+
+            ghosts.push({ x: 250, y: 50, size: 20, speed: 2.5, isChasing: false });
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!gameover) {
+                // Update player position
+                if (playerX < playerSize) {
+                    playerX = playerSize;
+                }
+                if (playerX > canvas.width - playerSize) {
+                    playerX = canvas.width - playerSize;
+                }
+                if (playerY < playerSize) {
+                    playerY = playerSize;
+                }
+                if (playerY > canvas.height - playerSize) {
+                    playerY = canvas.height - playerSize;
+                }
+
+                // Update coin collection
+                coins.forEach(coin => {
+                    if (!coin.isCollected) {
+                        const dx = playerX - coin.x;
+                        const dy = playerY - coin.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < playerSize + coin.size) {
+                            coin.isCollected = true;
+                            score += 10;
+                        }
+                    }
+                });
+
+                // Update game level when all coins are collected
+                if (coins.every(coin => coin.isCollected)) {
+                    level++;
+                    coins.forEach(coin => {
+                        coin.isCollected = false;
+                    });
+                    ghosts.push({ x: 250, y: 50, size: 20, speed: 2.5, isChasing: false });
+                }
+
+                // Update ghost positions
+                ghosts.forEach(ghost => {
+                    if (ghost.isChasing) {
+                        const dx = playerX - ghost.x;
+                        const dy = playerY - ghost.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < playerSize + ghost.size) {
+                            // Player collided with ghost, respawn player and decrement lives
+                            playerX = canvas.width / 2;
+                            playerY = canvas.height - 30;
+                            playerLives--;
+                        } else {
+                            // Ghost is chasing player
+                            ghost.x += dx / distance * ghost.speed;
+                            ghost.y += dy / distance * ghost.speed                    }
+                } else {
+                    // Ghost is moving randomly
+                    const direction = Math.floor(Math.random() * 4); // 0: up, 1: down, 2: left, 3: right
+
+                    switch (direction) {
+                        case 0:
+                            ghost.y -= ghost.speed;
+                            break;
+                        case 1:
+                            ghost.y += ghost.speed;
+                            break;
+                        case 2:
+                            ghost.x -= ghost.speed;
+                            break;
+                        case 3:
+                            ghost.x += ghost.speed;
+                            break;
+                    }
+                }
+
+                // Draw ghost
+                ctx.fillStyle = "red";
+                ctx.beginPath();
+                ctx.arc(ghost.x, ghost.y, ghost.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            });
+
+            // Draw player
+            ctx.fillStyle = "yellow";
+            ctx.beginPath();
+            ctx.arc(playerX, playerY, playerSize, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw coins
+            ctx.fillStyle = "white";
+            coins.forEach(coin => {
+                if (!coin.isCollected) {
+                    ctx.beginPath();
+                    ctx.arc(coin.x, coin.y, coin.size, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            });
+
+            // Draw game info
+            ctx.fillStyle = "white";
+            ctx.font = "16px Arial";
+            ctx.fillText("Score: " + score, 10, 20);
+            ctx.fillText("Lives: " + playerLives, canvas.width - 70, 20);
+            ctx.fillText("Level: " + level, canvas.width / 2 - 30, 20);
+
+            // Check game over condition
+            if (playerLives === 0) {
+                gameover = true;
+                ctx.fillStyle = "red";
+                ctx.font = "40px Arial";
+                ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+    }
+
+    // Start the game
+    initializeGame();
+    gameLoop();
+
+    // Handle player movement with directional keys
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+            playerY -= playerSpeed;
+        } else if (e.key === "ArrowDown") {
+            playerY += playerSpeed;
+        } else if (e.key === "ArrowLeft") {
+            playerX -= playerSpeed;
+        } else if (e.key === "ArrowRight") {
+            playerX += playerSpeed;
+        }
+    });
+</script>
+</body>
+</html>

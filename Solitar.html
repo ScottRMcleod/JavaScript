@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solitaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #00aa00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            width: 100px;
+            height: 150px;
+            background-color: white;
+            margin: 0 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="card" onclick="flipCard('hearts')"><h1 style="color: red;">♥</h1></div>
+    <div class="card" onclick="flipCard('spades')"><h1>♠</h1></div>
+    <div class="card" onclick="flipCard('clubs')"><h1>♣</h1></div>
+    <div class="card" onclick="flipCard('diamonds')"><h1 style="color: red;">♦</h1></div>
+    <div class="card" onclick="flipCard('kings')"><h1 style="color: red;">♚</h1></div>
+    <div class="card" onclick="flipCard('queens')"><h1>♛</h1></div>
+    <div class="card" onclick="flipCard('jacks')"><h1 style="color: red;">♛</h1></div>
+    <div class="card" onclick="flipCard('joker')"><h1>🃏</h1></div>
+    <div class="card" onclick="flipCard('kings')"><h1>♚</h1></div>
+    <div class="card" onclick="flipCard('queens')"><h1 style="color: red;">♛</h1></div>
+    <div class="card" onclick="flipCard('jacks')"><h1>♛</h1></div>
+    <div class="card" onclick="flipCard('joker')"><h1>🃏</h1></div>
+
+    <script>
+        function flipCard(cardType) {
+            alert("You clicked on the " + cardType + " card!");
+        }
+    </script>
+</body>
+</html>

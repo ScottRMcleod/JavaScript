@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+      <div class="card-header">Calculator</div>
+      <div class="card-body">
+        <input type="text" id="result" class="form-control mb-2" readonly>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('7')">7</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('8')">8</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('9')">9</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-warning btn-block" onclick="appendCharacter('/')">/</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('4')">4</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('5')">5</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('6')">6</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-warning btn-block" onclick="appendCharacter('*')">*</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('1')">1</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('2')">2</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('3')">3</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-warning btn-block" onclick="appendCharacter('-')">-</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('0')">0</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('.')">.</button>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-secondary btn-block" onclick="appendCharacter('%')">%</button>
+          </div>
+          <div class="col-md-3">
+            <button class+=" onclick="appendCharacter('+')">+</button>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3">
+<button class="btn btn-secondary btn-block" onclick="clearResult()">C</button>
+</div>
+<div class="col-md-3">
+<button class="btn btn-secondary btn-block" onclick="calculateResult()">=</button>
+</div>
+<div class="col-md-3">
+<button class="btn btn-primary btn-block" onclick="calculateSqrt()">√</button>
+</div>
+<div class="col-md-3">
+<button class="btn btn-primary btn-block" onclick="calculatePower()">^</button>
+</div>
+</div>
+<div class="row">
+<div class="col-md-4">
+<button class="btn btn-primary btn-block" onclick="calculateSin()">sin</button>
+</div>
+<div class="col-md-4">
+<button class="btn btn-primary btn-block" onclick="calculateCos()">cos</button>
+</div>
+<div class="col-md-4">
+<button class="btn btn-primary btn-block" onclick="calculateTan()">tan</button>
+</div>
+</div>
+</div>
+</div>
+
+  </div>
+  <!-- Include Bootstrap JS and custom JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script>
+    // Function to append character to the result input field
+    function appendCharacter(character) {
+      document.getElementById('result').value += character;
+    }
+
+    // Function to clear the result input field
+    function clearResult() {
+      document.getElementById('result').value = '';
+    }
+
+    // Function to calculate the result
+    function calculateResult() {
+      let result = document.getElementById('result').value;
+      try {
+        result = eval(result);
+        document.getElementById('result').value = result;
+      } catch (error) {
+        document.getElementById('result').value = 'Error';
+      }
+    }
+
+    // Function to calculate square root of the result
+    function calculateSqrt() {
+      let result = document.getElementById('result').value;
+      result = Math.sqrt(result);
+      document.getElementById('result').value = result;
+    }
+
+    // Function to calculate result to the power of 2
+    function calculatePower() {
+      let result = document.getElementById('result').value;
+      result = Math.pow(result, 2);
+      document.getElementById('result').value = result;
+    }
+
+    // Function to calculate sin of the result
+    function calculateSin() {
+      let result = document.getElementById('result').value;
+      result = Math.sin(result);
+      document.getElementById('result').value = result;
+    }
+
+    // Function to calculate cos of the result
+    function calculateCos() {
+      let result = document.getElementById('result').value;
+      result = Math.cos(result);
+      document.getElementById('result').value = result;
+    }
+
+    // Function to calculate tan of the result
+    function calculateTan() {
+      let result = document.getElementById('result').value;
+      result = Math.tan(result);
+      document.getElementById('result').value = result;
+    }
+  </script>
+</body>
+</html>

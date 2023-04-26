@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reading App</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			font-size: 18px;
+		}
+
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		.btn {
+			display: inline-block;
+			padding: 10px 20px;
+			font-size: 16px;
+			font-weight: bold;
+			color: #fff;
+			background-color: #4285f4;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.btn:hover {
+			background-color: #3367d6;
+		}
+
+		.text-area {
+			margin-top: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			height: 800px;
+			width: 800px;
+			resize: none;
+			font-size: 16px;
+		}
+
+		.voice-select {
+			display: block;
+			margin-top: 20px;
+			font-size: 16px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #f9f9f9;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		.voice-list {
+			margin-top: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			height: 200px;
+			overflow: auto;
+			font-size: 16px;
+		}
+
+		.voice-list li {
+			list-style: none;
+			margin-bottom: 10px;
+		}
+
+		.voice-list li span {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Reading App</h1>
+		<p>Type or paste some text below to hear it read aloud:</p>
+		<textarea class="text-area" id="input-text"></textarea>
+		<select class="voice-select" id="voice-select"></select>
+		<button class="btn" id="speak-btn">Speak</button>
+		<h2>Available Voices:</h2>
+		<ul class="voice-list" id="voice-list"></ul>
+	</div>
+
+	<script>
+		// Get references to the DOM elements
+		const speakBtn = document.getElementById('speak-btn');
+		const inputText = document.getElementById('input-text');
+		const voiceSelect = document.getElementById('voice-select');
+		const voiceList = document.getElementById('voice-list');
+
+		// Add event listener to the Speak button
+		speakBtn.addEventListener('click', () => {
+			// Create a new instance of the SpeechSynthesisUtterance object
+			const utterance = new SpeechSynthesisUtterance();
+
+			// Set the text to be spoken
+			utterance.text = inputText.value;
+
+			// Set the voice to be used (optional)
+			utterance.voice = speechSynthesis.getVoices()[voiceSelect.selectedIndex];
+		// Speak the text
+		speechSynthesis.speak(utterance);
+	});
+
+	// Populate the voice select dropdown with available voices
+	function populateVoiceSelect() {
+		const voices = speechSynthesis.getVoices();
+
+		// Clear the current options
+		voiceSelect.innerHTML = '';
+
+		// Add the new options
+		voices.forEach((voice, index) => {
+			const option = document.createElement('option');
+			option.value = index;
+			option.textContent = voice.name + ' (' + voice.lang + ')';
+			voiceSelect.appendChild(option);
+
+			// Display the voice names and indices in the voice list
+			const listItem = document.createElement('li');
+			listItem.innerHTML = '<span>' + index + ': </span>' + voice.name + ' (' + voice.lang + ')';
+			voiceList.appendChild(listItem);
+		});
+	}
+
+	// Wait for the voices to load before populating the dropdown
+	window.speechSynthesis.onvoiceschanged = () => {
+		populateVoiceSelect();
+	};
+</script>
+</body>
+</html>
+
+
+			

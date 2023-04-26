@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASCII Art Converter</title>
+    <style>
+        body {
+            font-family: monospace;
+            white-space: pre;
+        }
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>ASCII Art Converter</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <pre id="asciiOutput"></pre>
+    <canvas id="canvas"></canvas>
+    
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const asciiOutput = document.getElementById('asciiOutput');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Load image when file input changes
+        imageInput.addEventListener('change', () => {
+            const image = new Image();
+            image.src = URL.createObjectURL(imageInput.files[0]);
+            image.onload = () => {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.drawImage(image, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const ascii = convertToAscii(imageData);
+                asciiOutput.textContent = ascii;
+            };
+        });
+
+        // Convert image data to ASCII art
+        function convertToAscii(imageData) {
+            const asciiChars = ["@", "#", "S", "%", "?", "*", "+", ";", ":", ",", "."];
+            const grayScaleChars = ["@", "B", "S", "G", "F", "E", "C", "Z", "z", ":", "."];
+            let ascii = '';
+            for (let i = 0; i < imageData.height; i += 8) {
+                for (let j = 0; j < imageData.width; j += 4) {
+                    const index = (i * imageData.width + j) * 4;
+                    const r = imageData.data[index];
+                    const g = imageData.data[index + 1];
+                    const b = imageData.data[index + 2];
+                    const gray = (r + g + b) / 3;
+                    const asciiChar = grayScaleChars[Math.floor(gray / 32)];
+                    ascii += asciiChar;
+                }
+                ascii += '\n';
+            }
+            return ascii;
+        }
+    </script>
+</body>
+</html>

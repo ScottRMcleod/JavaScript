@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ChatBot Example</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">ChatBot</h1>
+    <div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to our Website!</h1>
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer gravida nunc nec lectus cursus, vel lacinia velit cursus. Pellentesque dignissim, ipsum sed molestie malesuada, urna erat commodo tortor, ac facilisis libero risus ac enim.</p>
+    <hr class="my-4">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam convallis, libero in volutpat iaculis, sapien justo convallis purus, nec ultrices sapien nisl ac urna. Sed et malesuada urna. Ut aliquam, odio vitae hendrerit tristique, mi urna tincidunt enim, nec vestibulum ipsum purus vel turpis.</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+  </div>
+    <div id="chatLog" class="mb-3"><h1>Please enter your name </h1></div>
+    <div class="form-group">  
+	<input type="text" class="form-control" id="userInput" placeholder="Type your message...">
+    </div>
+    <button type="button" class="btn btn-primary" id="sendButton">Send</button>
+  </div>
+
+  <script>
+    var userName = ""; // Global variable to store user's name
+
+    document.getElementById("sendButton").addEventListener("click", sendMessage);
+    document.getElementById("userInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
+      var userInput = document.getElementById("userInput");
+      var userMessage = userInput.value.trim();
+      if (userMessage === "") {
+        return;
+      }
+
+      var chatLog = document.getElementById("chatLog");
+      var userItem = document.createElement("div");
+      userItem.className = "alert alert-primary mt-3";
+      userItem.textContent = "You: " + userMessage;
+      chatLog.appendChild(userItem);
+
+      userInput.value = "";
+      userInput.focus();
+
+      var botMessage = generateBotResponse(userMessage);
+      var botItem = document.createElement("div");
+      botItem.className = "alert alert-secondary mt-3";
+      botItem.textContent = "ChatBot: " + botMessage;
+      chatLog.appendChild(botItem);
+
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function generateBotResponse(userMessage) {
+      var response = ""; // Variable to store bot's response
+
+      // If user's name is not set, ask for it and store it
+      if (userName === "") {
+        userName = userMessage;
+        response = "Hi " + userName + "! How can I assist you today?";
+      } else {
+        // Use user's name in the responses
+        userMessage = userMessage.toLowerCase();
+        if (userMessage.includes("products")) {
+          response = "Sure, " + userName + "! We have a wide range of products available. Please visit our website to browse our latest collection.";
+        } else if (userMessage.includes("payments")) {
+          response = "To make a payment, " + userName + ", you can use our online payment portal on our website or contact our customer support for alternative payment options.";
+        } else if (userMessage.includes("track orders")) {
+          response = "You can track your orders, " + userName + ", by logging into your account on our website or by contacting our customer support with your order details.";
+        } else if (userMessage.includes("refunds")) {
+          response = "For refund requests, " + userName + ", please contact our customer support with your order details and they will assist you further.";
+        } else {
+          response = "I'm sorry, " + userName + ". I didn't understand your question. Can you please provide more details or ask a different question?";
+        }
+      }
+
+      return response;
+    }
+  </script>
+</body>
+</html>

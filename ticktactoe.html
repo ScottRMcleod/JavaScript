@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Squares Game</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            gap: 2px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cell:hover {
+            background-color: #ddd;
+        }
+
+        .cell.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .player1 {
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        .player2 {
+            background-color: #00ff00;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid" id="grid"></div>
+    <script>
+        const gridSize = 10;
+        const cells = [];
+        let currentPlayer = 1;
+
+        // Create the grid
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.addEventListener('click', () => toggleCell(cell));
+            grid.appendChild(cell);
+            cells.push(cell);
+        }
+
+        // Toggle the cell state when clicked
+        function toggleCell(cell) {
+            if (!cell.classList.contains('active')) {
+                cell.classList.add('active');
+                cell.textContent = currentPlayer === 1 ? 'X' : 'O';
+                checkForSquare();
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                updatePlayerStyles();
+            }
+        }
+
+        // Update player styles
+        function updatePlayerStyles() {
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove('player1', 'player2');
+                if (currentPlayer === 1 && cells[i].textContent === 'X') {
+                    cells[i].classList.add('player1');
+                } else if (currentPlayer === 2 && cells[i].textContent === 'O') {
+                    cells[i].classList.add('player2');
+                }
+            }
+        }
+
+        // Check for squares
+        function checkForSquare() {
+            for (let i = 0; i < cells.length; i++) {
+                const cell = cells[i];
+                if (cell.classList.contains('active') && cell.textContent !== '') {
+                    const row = Math.floor(i / gridSize);
+                    const col = i % gridSize;
+                    if (row < gridSize - 1 && col < gridSize - 1) {
+                        const cell2 = cells[i + 1];
+                        const cell3 = cells[i + gridSize];
+                        const cell4 = cells[i + gridSize + 1];
+                        if (cell2.classList.contains('active') && cell3.classList.contains('active') && cell4.classList.contains('active')) {
+                            const playerName = currentPlayer === 1 ? 'Player 1' : 'Player 2';
+                            cell.textContent = playerName;
+                            cell.classList.add(currentPlayer === 1 ? 'player1' : 'player2');
+                        }
+                    }
+                }
+            }
+                // Check for game over
+                const isGameOver = cells.every(cell => cell.classList.contains('active'));
+                if (isGameOver) {
+                    alert('Game Over!');
+                    resetGame();
+                }
+            }
+
+            // Reset the game
+            function resetGame() {
+                for (let i = 0; i < cells.length; i++) {
+                    cells[i].classList.remove('active', 'player1', 'player2');
+                    cells[i].textContent = '';
+                }
+                currentPlayer = 1;
+                updatePlayerStyles();
+            }
+        </script>
+    </body>
+</html>

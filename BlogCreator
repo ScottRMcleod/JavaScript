@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blog Generator</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Blog Generator</h1>
+    <form id="topicForm">
+      <div class="form-group row">
+        <label for="topic1" class="col-sm-2 col-form-label">Topic 1:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="topic1" name="topic1">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="topic2" class="col-sm-2 col-form-label">Topic 2:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="topic2" name="topic2">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="topic3" class="col-sm-2 col-form-label">Topic 3:</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="topic3" name="topic3">
+        </div>
+      </div>
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary">Generate Blogs</button>
+      </div>
+    </form>
+
+    <div id="blogContainer" class="row">
+      <!-- Generated blogs will be appended here -->
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Function to generate blogs based on topics
+    function generateBlogs() {
+      event.preventDefault(); // Prevent form submission
+      var topics = []; // Array to store selected topics
+      // Get input values
+      var topic1 = $('#topic1').val();
+      var topic2 = $('#topic2').val();
+      var topic3 = $('#topic3').val();
+      // Push selected topics to the array
+      if (topic1) {
+        topics.push(topic1);
+      }
+      if (topic2) {
+        topics.push(topic2);
+      }
+      if (topic3) {
+        topics.push(topic3);
+      }
+      // Clear previous blogs
+      $('#blogContainer').empty();
+      // Generate blogs
+  // Loop through topics array and create blogs
+  topics.forEach(function(topic) {
+    var blogHTML = `
+      <div class="col-md-4">
+        <div class="card">
+          <img src="https://via.placeholder.com/150" class="card-img-top" alt="Blog Image">
+          <div class="card-body">
+            <h5 class="card-title">${topic} Blog</h5>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sed orci ac lectus malesuada aliquet. Vestibulum sed aliquet est, vitae gravida orci. Sed interdum semper dictum.</p>
+            <a href="#" class="btn btn-primary">Read More</a>
+          </div>
+        </div>
+      </div>
+    `;
+    // Append blog HTML to blogContainer
+    $('#blogContainer').append(blogHTML);
+  });
+}
+
+// Add event listener to the form submit event
+$('#topicForm').on('submit', generateBlogs);
+  </script>
+</body>
+</html>

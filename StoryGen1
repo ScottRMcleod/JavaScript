@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Story Generator</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <style>
+	.text-area {
+			margin-top: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			height: 800px;
+			width: 800px;
+			resize: none;
+			font-size: 16px;
+		}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Story Generator</h1>
+    <form id="story-form">
+      <div class="form-group">
+        <label for="sentence-input">Enter a sentence:</label>
+        <input type="text" class="form-control" id="sentence-input" placeholder="Once upon a time...">
+      </div>
+      <button type="submit" class="btn btn-primary">Generate Story</button>
+	<button type="button" class="btn btn-primary" id="speak-button">Read Story</button>
+      <button type="button" class="btn btn-secondary" id="clear-button">Clear</button>
+    </form>
+    <div id="output-story"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('story-form');
+    const sentenceInput = document.getElementById('sentence-input');
+    const output = document.getElementById('output-story');
+    const clearButton = document.getElementById('clear-button');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const sentence = sentenceInput.value;
+      const namedEntity = 'John'; // hardcoded for now
+      const story = `Once upon a time, ${sentence}. It was a dark and stormy night, and the kingdom was under attack by a horde of vicious monsters. One day, the king of the kingdom summoned Sir ${namedEntity} to go on a quest to slay a fierce dragon that had been terrorizing the land.
+
+Sir ${namedEntity} set out on his journey, equipped with his sword and shield. Along the way, he encountered many obstacles and faced countless battles, but he never gave up. Finally, after weeks of travel, Sir ${namedEntity} arrived at the dragon's lair. With all his might, he fought the beast and managed to slay it, saving the kingdom from certain destruction. From that day forward, Sir ${namedEntity} was hailed as a hero and his name was spoken with reverence throughout the land.
+Sir John traveled to the west, where he found a small village in danger of being overrun by bandits. Without hesitation, he stepped forward to help, slaying the bandit leader and freeing the villagers from their tyranny. The villagers thanked Sir John for his bravery and offered him a place to stay for the night.
+The next day, Sir John continued his journey, but he could not shake off the feeling that he was being followed. As he approached a fork in the road, he was ambushed by a group of rogue knights who accused him of being a traitor to the kingdom. Sir John fought bravely, but he was outnumbered and outmatched. Just as he was about to be defeated, a group of knights loyal to the king arrived to save him. Sir John proved his loyalty to the king and joined forces with the knights to defeat the rogue knights.
+As he continued his journey, Sir John encountered many more challenges and faced countless battles. He visited towns and cities that were in peril and saved them from certain destruction. Some of the people he helped were good and honest, while others were corrupt and deceitful. Sir John had to make difficult decisions, but he always chose to do what was right, no matter the cost.
+Finally, after months of travel, Sir John arrived at the kingdom's capital. He was welcomed as a hero, and the king praised him for his bravery and loyalty. Sir John was given a hero's welcome and offered the title of Lord, but he declined, choosing instead to continue his journey, always ready to help those in need.
+Sir John's reputation as a hero spread far and wide, and people came from all over the kingdom to seek his help. He was always ready to lend a hand, whether it was defending a village from marauding orcs, rescuing a princess from a dragon's lair, or negotiating peace between warring factions.
+
+As he traveled, Sir John also continued to face challenges of his own. He was tempted by the allure of power and wealth, and sometimes he struggled with doubt and fear. But he always managed to find his way back to the path of righteousness and honor.
+
+Years went by, and Sir John grew old and weary. But he never lost his sense of purpose, and he continued to travel the kingdom, helping those in need and spreading hope and inspiration wherever he went. When he finally passed away, he was mourned by all who had known him, and his legacy as a hero lived on for generations to come.
+
+And so, the story of Sir John, the noble knight who devoted his life to serving others, came to an end. But his spirit lived on, inspiring future generations to be brave, kind, and selfless, and to always stand up for what is right.
+In the years that followed Sir John's passing, the kingdom prospered and thrived. The people remembered his heroism and his sacrifices, and they honored his memory by continuing to uphold the values he had embodied.
+
+But as time went on, new threats began to emerge. Dark forces gathered on the horizon, and rumors spread of a great evil that threatened to engulf the land. The people looked to their leaders for guidance, but many felt that they were ill-equipped to deal with the danger that loomed ahead.
+
+In this time of crisis, a young adventurer stepped forward, determined to follow in Sir John's footsteps and defend the kingdom from harm. With a heart full of courage and a mind sharp and keen, this new hero set out on a journey that would test their limits and challenge their resolve.
+
+They traveled far and wide, facing dangers and obstacles at every turn. But they were not alone; along the way, they met many others who shared their cause, and together they formed a band of allies, united in their quest to protect the kingdom from harm.
+
+And as they journeyed on, the young hero felt Sir John's spirit guiding them, a beacon of light in the darkness that showed them the way forward. They knew that they could never fill his shoes, but they also knew that they had inherited his legacy, and that they had a duty to honor it by living up to his example.
+
+And so, the story of Sir John, the legendary hero who had inspired so many, lived on in the deeds of a new generation of adventurers, who carried his spirit with them as they fought to protect the kingdom from all manner of threats and dangers.
+`;
+
+      // Display the generated story on the page
+      //output.innerHTML = `<p>${story}</p>`;
+	output.innerHTML = `<textarea class='text-area' id='input-text'>${story}</textarea>`;
+    });
+
+    clearButton.addEventListener('click', () => {
+      sentenceInput.value = '';
+      output.innerHTML = '';
+    });
+
+  </script>
+
+<script>
+const speakButton = document.getElementById('speak-button');
+
+speakButton.addEventListener('click', () => {
+  const textToSpeak = output.innerText;
+  const speech = new SpeechSynthesisUtterance(textToSpeak);
+  speech.lang = 'en-US';
+  speech.volume = 1;
+  speech.rate = 1;
+  speech.pitch = 1;
+  window.speechSynthesis.speak(speech);
+});
+</script>
+</body>
+</html>

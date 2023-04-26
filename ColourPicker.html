@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Color Table</title>
+    <style>
+        .color-cell {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Color Table</h1>
+    <p>Select a color from the table to change the background color of the page:</p>
+    <div id="colorTable">
+        <!-- Color table goes here -->
+    </div>
+
+    <script>
+        // Array of colors
+        var colors = [
+            "#FF0000", "#FF8000", "#FFFF00", "#80FF00", "#00FF00",
+            "#00FF80", "#00FFFF", "#0080FF", "#0000FF", "#8000FF",
+            "#FF00FF", "#FF0080", "#808080", "#FFFFFF"
+        ];
+
+        // Generate color table
+        var colorTable = document.getElementById('colorTable');
+        for (var i = 0; i < colors.length; i++) {
+            var colorCell = document.createElement('div');
+            colorCell.className = 'color-cell';
+            colorCell.style.backgroundColor = colors[i];
+            colorCell.addEventListener('click', function () {
+                changeBackgroundColor(this.style.backgroundColor);
+            });
+            colorTable.appendChild(colorCell);
+        }
+
+        // Function to change the background color of the page
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Space Invaders Clone</title>
+<style>
+        /* Set body to full viewport height */
+        body {
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Create stars */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: black;
+        }
+
+        /* Create star elements */
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            animation: twinkle 1s infinite;
+        }
+
+        /* Define twinkle animation */
+        @keyframes twinkle {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stars"></div>
+    <!-- Add your content here -->
+
+    <script>
+        // Generate stars dynamically
+        const starsContainer = document.querySelector('.stars');
+        const numStars = 100; // Number of stars to generate
+
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${getRandomNumber(0, 100)}vh`;
+            star.style.left = `${getRandomNumber(0, 100)}vw`;
+            star.style.animationDelay = `${getRandomNumber(0, 1000)}ms`;
+            starsContainer.appendChild(star);
+        }
+
+        // Utility function to get a random number between min and max (inclusive)
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+    </script>
+  <canvas id="myCanvas" width="512" height="512"></canvas>
+
+  <script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+
+    var playerX = canvas.width / 2;
+    var playerY = canvas.height - 30;
+    var playerWidth = 20;
+    var playerHeight = 20;
+    var playerSpeed = 25;
+
+    var enemyRowCount = 5;
+    var enemyColumnCount = 15;
+    var enemyWidth = 20;
+    var enemyHeight = 20;
+    var enemyPadding = 10;
+    var enemyOffsetTop = 30;
+    var enemyOffsetLeft = 30;
+    var enemySpeed = 10;
+    var enemies = [];
+    for (var c = 0; c < enemyColumnCount; c++) {
+      enemies[c] = [];
+      for (var r = 0; r < enemyRowCount; r++) {
+        enemies[c][r] = { x: 0, y: 0, alive: true };
+      }
+    }
+
+    var missileWidth = 5;
+    var missileHeight = 10;
+    var missileSpeed = 5;
+    var missile = { x: -missileWidth, y: -missileHeight, fired: false };
+
+    var score = 0;
+
+    document.addEventListener("keydown", keyDownHandler, false);
+
+    function keyDownHandler(e) 
+    {
+      if (e.key == "Right" || e.key == "ArrowRight") 
+      {
+        playerX += playerSpeed;
+        if (playerX + playerWidth > canvas.width) 
+           {
+             playerX = canvas.width - playerWidth;
+           }
+      } 
+      else if (e.key == "Left" || e.key == "ArrowLeft") 
+      {
+        playerX -= playerSpeed;
+        if (playerX < 0) 
+        {
+          playerX = 5;
+        }
+      } 
+      else if (e.key == "Up" || e.key == "ArrowUp") 
+      {
+  	playerY -= playerSpeed;
+  	if (playerY < 0) 
+        {
+    	  playerY = 5;
+  	}
+      } 
+      else if (e.key == "Down" || e.key == "ArrowDown") 
+      {
+  	playerY += playerSpeed;
+  	if (playerY + playerHeight > canvas.height) 
+        {
+    	   playerY = canvas.height - playerHeight;
+  	}
+      } 
+      else if (e.key == " " && !missile.fired) {
+        missile.fired = true;
+        missile.x = playerX + playerWidth / 2 - missileWidth / 2;
+        missile.y = playerY - missileHeight;
+      }
+    }
+
+    function drawPlayer() {
+      ctx.beginPath();
+      ctx.rect(playerX, playerY, playerWidth, playerHeight);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    function updatePlayer() {
+      // Not used in this version
+    }
+
+    function drawEnemies() {
+      for (var c = 0; c < enemyColumnCount; c++) {
+        for (var r = 0; r < enemyRowCount; r++) {
+          if (enemies[c][r].alive) {
+            var enemyX = (c * (enemyWidth + enemyPadding)) + enemyOffsetLeft;
+            var enemyY = (r * (enemyHeight + enemyPadding)) + enemyOffsetTop;
+            enemies[c][r].x = enemyX;
+            enemies[c][r].y = enemyY;
+            ctx.beginPath();
+            ctx.rect(enemyX, enemyY, enemyWidth, enemyHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+          }
+        }
+      }
+    }
+
+    function updateEnemies() {
+      for (var c = 0; c < enemyColumnCount; c++) {
+        for (var r = 0; r < enemyRowCount; r++) {
+         
+      if (enemies[c][r].alive) {
+        enemies[c][r].y += enemySpeed;
+        if (enemies[c][r].y + enemyHeight > playerY) {
+          alert("GAME OVER");
+          document.location.reload();
+        }
+      }
+    }
+  }
+}
+
+function drawMissile() {
+  if (missile.fired) {
+    ctx.beginPath();
+    ctx.rect(missile.x, missile.y, missileWidth, missileHeight);
+    ctx.fillStyle = "#FF0000";
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+function updateMissile() {
+  if (missile.fired) {
+    missile.y -= missileSpeed;
+    if (missile.y < 0) {
+      missile.fired = false;
+      missile.x = -missileWidth;
+      missile.y = -missileHeight;
+    }
+  }
+
+  for (var c = 0; c < enemyColumnCount; c++) {
+    for (var r = 0; r < enemyRowCount; r++) {
+      if (enemies[c][r].alive) {
+        var enemy = enemies[c][r];
+        if (missile.x < enemy.x + enemyWidth && missile.x + missileWidth > enemy.x &&
+            missile.y < enemy.y + enemyHeight && missile.y + missileHeight > enemy.y) {
+          enemy.alive = false;
+          missile.fired = false;
+          missile.x = -missileWidth;
+          missile.y = -missileHeight;
+          score += 10;
+        }
+      }
+    }
+  }
+}
+
+function drawScore() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("Score: " + score, 8, 20);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPlayer();
+  drawEnemies();
+  drawMissile();
+  drawScore();
+  updatePlayer();
+  updateEnemies();
+  updateMissile();
+}
+
+setInterval(draw, 10);
+</script>
+</body>
+</html>

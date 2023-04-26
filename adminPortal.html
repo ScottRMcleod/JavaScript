@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Virtual Machine Management</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<!-- Custom CSS -->
+<style>
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+#vm-table {
+    margin-top: 20px;
+}
+
+.btn-edit {
+    margin-right: 5px;
+}
+
+.btn-delete {
+    margin-left: 5px;
+}
+ #terminal {
+            height: 400px;
+            margin-top: 20px;
+            background-color: #000;
+            color: #fff;
+        }
+ #terminal2 {
+            height: 400px;
+            margin-top: 20px;
+            background-color: #000;
+            color: #fff;
+        }
+.computer-icon {
+  position: relative;
+  width: 100px;
+  height: 80px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.monitor {
+  position: relative;
+  width: 80px;
+  height: 60px;
+  margin: 10px auto;
+  background-color: #222;
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.screen {
+  position: relative;
+  width: 70px;
+  height: 50px;
+  margin: 5px auto;
+  background-color: #f5f5f5;
+  border-radius: 0 0 10px 10px;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.base {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #222;
+}
+
+.cd-drive {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #222;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.2), 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.power-button {
+  position: absolute;
+  bottom: -10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff2e2e;
+  border-radius: 50%;
+  box-shadow: inset 0 0 
+  2px rgba(255, 255, 255, 0.2), 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.power-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+}
+.vm-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+}
+
+.vm-table-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.vm-table-header {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.vm-table-cell {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.vm-table-row:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.vm-table-row:nth-child(odd) {
+  background-color: #fff;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Virtual Machine Management</h1>
+		<hr>
+		<!-- Create VM Form -->
+		<form id="create-vm-form" class="form-horizontal">
+			<h2>Create New VM</h2>
+			<div class="form-group">
+				<label for="vm-name" class="col-sm-2 control-label">VM Name</label>
+				<div class="col-sm-10">
+				<input type="text" class="form-control" id="vm-name" name="vm-name" placeholder="Enter VM Name">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="vm-type" class="col-sm-2 control-label">VM Type</label>
+				<div class="col-sm-10">
+					<select class="form-control" id="vm-type" name="vm-type">
+						<option value="virtualbox">VirtualBox</option>
+						<option value="vmware">VMware Workstation</option>
+						<option value="vmware">Micrsoft - Hypervisor</option>
+					</select>
+	
+				</div>
+		</form>
+		<hr>
+		<!-- List VMs Table -->
+		<table id="vm-table" class="table table-striped">
+			<h2>List of VMs</h2>
+			<div class="vm-table">
+  				<div class="vm-table-row vm-table-header">
+    				<div class="vm-table-cell">VM Name</div>
+    				<div class="vm-table-cell">VM Type</div>
+    				<div class="vm-table-cell">VM Processor</div>
+    				<div class="vm-table-cell">VM RAM</div>
+    				<div class="vm-table-cell">VM Storage</div>
+    				<div class="vm-table-cell">Operating System</div>
+    				<div class="vm-table-cell">IP Address</div>
+  </div>
+  <div class="vm-table-row">
+    <div class="vm-table-cell">VM 1
+    </div>
+    <div class="vm-table-cell">Type A</div>
+    <div class="vm-table-cell">4 cores</div>
+    <div class="vm-table-cell">16 GB</div>
+    <div class="vm-table-cell">500 GB</div>
+    <div class="vm-table-cell">Windows Server 2016</div>
+    <div class="vm-table-cell">192.168.1.1</div>
+  </div>
+  <div class="vm-table-row">
+    <div class="vm-table-cell">VM 2</div>
+    <div class="vm-table-cell">Type B</div>
+    <div class="vm-table-cell">2 cores</div>
+    <div class="vm-table-cell">8 GB</div>
+    <div class="vm-table-cell">250 GB</div>
+    <div class="vm-table-cell">Ubuntu 20.04</div>
+    <div class="vm-table-cell">192.168.1.2</div>
+  </div>
+  <div class="vm-table-row">
+    <div class="vm-table-cell">VM 3</div>
+    <div class="vm-table-cell">Type C</div>
+    <div class="vm-table-cell">8 cores</div>
+    <div class="vm-table-cell">32 GB</div>
+    <div class="vm-table-cell">1 TB</div>
+    <div class="vm-table-cell">CentOS 7</div>
+    <div class="vm-table-cell">192.168.1.3</div>
+  </div>
+</div>
+	<div id="terminal2">
+	 <p>Welcome to Azure PowerShell Simulator!</p>
+                    <p>Type "help" to see available commands.</p>
+                    <span id="cursor" class="text-light">_</span>
+	</div>
+                <input type="text" class="form-control mt-3" id="inputCommand2" autofocus>
+            </div>
+	</div>
+	<hr></hr>
+	<div class="container mt-5">
+        <h1>Cisco Router & Switch Simulator</h1>
+	<div class="router-icon">
+    <div class="router-body">
+      <div class="router-front"></div>
+    </div>
+    <div class="router-antennas">
+      <div class="antenna antenna-left"></div>
+      <div class="antenna antenna-right"></div>
+    </div>
+  </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="bg-dark text-light p-3" id="terminal" style="height: 400px; overflow-y: scroll;">
+                    <p>Welcome to Cisco Router Simulator!</p>
+                    <p>Type "help" to see available commands.</p>
+                    <span id="cursor" class="text-light">_</span>
+                </div>
+                <input type="text" class="form-control mt-3" id="inputCommand" autofocus>
+            </div>
+        </div>
+    </div>
+	</div>
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Custom JS -->
+	<script src="script.js">
+$(document).ready(function() {
+    // Load the list of VMs on page load
+    loadVMs();
+
+    // Submit the create VM form
+    $('#create-vm-form').submit(function(event) {
+        event.preventDefault();
+        var vmName = $('#vm-name').val();
+        var vmType = $('#vm-type').val();
+        createVM(vmName, vmType);
+    });
+});
+
+// Load the list of VMs from the server and add them to the table
+function loadVMs() {
+    $.ajax({
+        url: '/vms',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var vmTable = $('#vm-table tbody');
+            vmTable.empty();
+            for (var i = 0; i < data.length; i++) {
+// Create a row for the VM and add it to the table
+var vm = data[i];
+var row = $('<tr>');
+row.append($('<td>').text(vm.name));
+row.append($('<td>').text(vm.type));
+row.append($('<td>').append($('<button>').attr('data-id', vm.id).addClass('btn btn-default btn-edit').text('Edit')));
+row.append($('<td>').append($('<button>').attr('data-id', vm.id).addClass('btn btn-danger btn-delete').text('Delete')));
+vmTable.append(row);
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log('Error loading VMs: ' + errorThrown);
+}
+});
+}
+
+// Create a new VM and add it to the list
+function createVM(name, type) {
+$.ajax({
+url: '/vms',
+type: 'POST',
+dataType: 'json',
+data: { name: name, type: type },
+success: function(data) {
+// Clear the form and reload the list of VMs
+$('#create-vm-form')[0].reset();
+loadVMs();
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log('Error creating VM: ' + errorThrown);
+}
+});
+}
+
+// Edit an existing VM
+function editVM(id) {
+// TODO: Implement
+}
+
+// Delete an existing VM
+function deleteVM(id) {
+$.ajax({
+url: '/vms/' + id,
+type: 'DELETE',
+success: function(data) {
+// Reload the list of VMs
+loadVMs();
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log('Error deleting VM: ' + errorThrown);
+}
+});
+}
+
+// Handle the click events for the edit and delete buttons
+$(document).on('click', '.btn-edit', function() {
+var id = $(this).attr('data-id');
+editVM(id);
+});
+
+$(document).on('click', '.btn-delete', function() {
+var id = $(this).attr('data-id');
+deleteVM(id);
+});
+var
+</script>
+    <script>
+        const terminal = document.getElementById('terminal');
+        const cursor = document.getElementById('cursor');
+        const inputCommand = document.getElementById('inputCommand');
+        inputCommand.addEventListener('keydown', handleInputKeydown);
+
+        function handleInputKeydown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const command = inputCommand.value;
+                inputCommand.value = '';
+                inputCommand.disabled = true;
+                cursor.style.display = 'none';
+                processCommand(command);
+            }
+        }
+
+        function processCommand(command) {
+            // Convert the command to lowercase for easier comparison
+            command = command.toLowerCase().trim();
+
+            // Create a div element for displaying the output
+            const output = document.createElement('div');
+            output.textContent = '> ' + command;
+            terminal.appendChild(output);
+
+            // Process the command
+            switch (command) {
+                case 'help':
+                    // Display help commands
+                    const helpCommands = [
+                        'show interfaces',
+                        'show ip routes',
+                        'show running-config',
+                        // Add more help commands here
+                    ];
+                    const helpOutput = document.createElement('div');
+                    helpOutput.textContent = 'Available commands: ' + helpCommands.join(', ');
+                    terminal.appendChild(helpOutput);
+                    break;
+                case 'show interfaces':
+                    // Simulate displaying interfaces
+                    const interfacesOutput = document.createElement('div');
+                    interfacesOutput.textContent = 'Output: Displaying interfaces...';
+                    terminal.appendChild(interfacesOutput);
+                    break;
+                case 'show ip routes':
+                    // Simulate displaying IP routes
+                    const routesOutput = document.createElement('div');
+                    routesOutput.textContent = 'Output: Displaying IP routes...';
+                    terminal.appendChild(routesOutput);
+                    break;
+                case 'show running-config':
+                    // Simulate displaying running configuration
+                    const configOutput = document.createElement('div');
+                    configOutput.textContent = 'Output: Displaying running configuration...';
+                    terminal.appendChild(configOutput);
+                    break;
+                default:
+                    // Display an error message for unknown commands
+                    const errorOutput = document.createElement('div');
+                    errorOutput.textContent = 'Output: Invalid command. Type "help" for available commands.';
+                    terminal.appendChild(errorOutput);
+                    break;
+            }
+
+            // Scroll to the bottom of the terminal window
+            terminal.scrollTop = terminal.scrollHeight;
+
+            // Enable input and set focus to input field
+            setTimeout(() => {
+                inputCommand.disabled = false;
+                cursor.style.display = 'inline';
+                inputCommand.focus();
+            }, 500);
+        }
+    </script>
+</body>
+</html>
+
+

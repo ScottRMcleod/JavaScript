@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Asset Management System</title>
+	<!-- Load Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<!-- Load jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<div class="container mt-5">
+		<h1 class="mb-4">Asset Management System</h1>
+		
+		<div class="row mb-3">
+			<div class="col-md-2">
+				<label for="laptopName">Laptop Name:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="text" id="laptopName" class="form-control">
+			</div>
+			<div class="col-md-2">
+				<label for="serialNumber">Serial Number:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="text" id="serialNumber" class="form-control">
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-md-2">
+				<label for="user">User:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="text" id="user" class="form-control">
+			</div>
+			<div class="col-md-2">
+				<label for="dateIssued">Date Issued:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="date" id="dateIssued" class="form-control">
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-md-2">
+				<label for="location">Location:</label>
+			</div>
+			<div class="col-md-4">
+				<input type="text" id="location" class="form-control">
+			</div>
+			<div class="col-md-6">
+				<button id="addAsset" class="btn btn-primary">Add Asset</button>
+			</div>
+		</div>
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Laptop Name</th>
+					<th>Serial Number</th>
+					<th>User</th>
+					<th>Date Issued</th>
+					<th>Location</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="assetTable">
+			</tbody>
+		</table>
+	</div>
+	
+	<!-- Load Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			// Initialize assets array
+			var assets = [];
+			
+			// Load assets on page load
+			loadAssets();
+			
+			// Add asset button click event
+			$("#addAsset").click(function() {
+				// Get input values
+				var laptopName = $("#laptopName").val();
+				var serialNumber = $("#serialNumber").val();
+				var user = $("#user").val();
+				var dateIssued = $("#dateIss").val();
+var location = $("#location").val();
+			// Add new asset to assets array
+			assets.push({
+				laptopName: laptopName,
+				serialNumber: serialNumber,
+				user: user,
+				dateIssued: dateIssued,
+				location: location
+			});
+			
+			// Save assets array to local storage
+			localStorage.setItem("assets", JSON.stringify(assets));
+			
+			// Clear input fields
+			$("#laptopName").val("");
+			$("#serialNumber").val("");
+			$("#user").val("");
+			$("#dateIssued").val("");
+			$("#location").val("");
+			
+			// Reload assets table
+			loadAssets();
+		});
+		
+		// Remove asset button click event
+		$(document).on("click", ".removeAsset", function() {
+			// Get asset index from data attribute
+			var index = $(this).data("index");
+			
+			// Remove asset from assets array
+			assets.splice(index, 1);
+			
+			// Save assets array to local storage
+			localStorage.setItem("assets", JSON.stringify(assets));
+			
+			// Reload assets table
+			loadAssets();
+		});
+		
+		// Load assets function
+		function loadAssets() {
+			// Clear assets table
+			$("#assetTable").html("");
+			
+			// Get assets from local storage
+			var assetsJson = localStorage.getItem("assets");
+			
+			// If assets exist, parse them and add them to table
+			if (assetsJson) {
+				assets = JSON.parse(assetsJson);
+				for (var i = 0; i < assets.length; i++) {
+					var asset = assets[i];
+					var rowClass = i % 2 == 0 ? "table-primary" : "table-secondary";
+					var row = "<tr class=\"" + rowClass + "\">";
+					row += "<td>" + asset.laptopName + "</td>";
+					row += "<td>" + asset.serialNumber + "</td>";
+					row += "<td>" + asset.user + "</td>";
+					row += "<td>" + asset.dateIssued + "</td>";
+					row += "<td>" + asset.location + "</td>";
+					row += "<td><button class=\"btn btn-danger removeAsset\" data-index=\"" + i + "\">Remove</button></td>";
+					row += "</tr>";
+					$("#assetTable").append(row);
+				}
+			}
+		}
+	});
+</script>
+</body>
+</html>
+

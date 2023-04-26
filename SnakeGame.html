@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Snake Game Clone</title>
+  <style>
+    canvas {
+      border: 1px solid #000;
+      display: block;
+      margin: 0 auto;
+      background-color: white;
+    }
+    body{background-color: #00aa00;}
+  </style>
+</head>
+<body >
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <script>
+    // Constants
+    const CANVAS_SIZE = 400;
+    const GRID_SIZE = 20;
+    const INITIAL_SPEED = 200;
+
+    // Game variables
+    let snake;
+    let food;
+    let direction;
+    let speed;
+    let gameLoop;
+
+    // Get canvas and context
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Initialize game
+    function initGame() {
+      // Create snake object
+      snake = {
+        body: [
+          {x: 160, y: 160},
+          {x: 140, y: 160},
+          {x: 120, y: 160}
+        ],
+        direction: {x: GRID_SIZE, y: 0}
+      };
+
+      // Create food object
+      food = {
+        x: Math.floor(Math.random() * (CANVAS_SIZE / GRID_SIZE)) * GRID_SIZE,
+        y: Math.floor(Math.random() * (CANVAS_SIZE / GRID_SIZE)) * GRID_SIZE
+      };
+
+      // Set initial direction and speed
+      direction = {x: GRID_SIZE, y: 0};
+      speed = INITIAL_SPEED;
+
+      // Start game loop
+      gameLoop = setInterval(updateGame, speed);
+    }
+
+    // Update game state
+    function updateGame() {
+      // Update snake position
+      const newHead = {x: snake.body[0].x + direction.x, y: snake.body[0].y + direction.y};
+      snake.body.unshift(newHead);
+
+      // Check for collision with food
+      if (snake.body[0].x === food.x && snake.body[0].y === food.y) {
+        // Generate new food location
+        food.x = Math.floor(Math.random() * (CANVAS_SIZE / GRID_SIZE)) * GRID_SIZE;
+        food.y = Math.floor(Math.random() * (CANVAS_SIZE / GRID_SIZE)) * GRID_SIZE;
+
+        // Increase speed
+        speed -= 10;
+        clearInterval(gameLoop);
+        gameLoop = setInterval(updateGame, speed);
+      } else {
+        // Remove tail segment
+        snake.body.pop();
+      }
+
+      // Check for collision with walls or self
+      if (snake.body[0].x < 0 || snake.body[0].x >= CANVAS_SIZE || snake.body[0].y < 0 || snake.body[0].y >= CANVAS_SIZE || checkCollisionWithSelf()) {
+        // Game over
+        clearInterval(gameLoop);
+        alert('Game over! Press OK to restart.');
+        initGame();
+        return;
+      }
+
+      // Clear canvas
+      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+      // Draw snake
+      ctx.fillStyle = '#00f';
+      snake.body.forEach(segment => {
+        ctx.fillRect(segment.x, segment.y, GRID_SIZE, GRID_SIZE);
+      });
+
+      // Draw food
+      ctx.fillStyle = '#f00';
+      ctx.fillRect(food.x, food.y, GRID_SIZE, GRID_SIZE);
+    }
+
+    // Check for collision with self
+    function checkCollisionWithSelf() {
+      const head = snake.body[0];
+      for (let i = 1; i < snake.body.length; i++){
+if (snake.body[i].x === head.x && snake.body[i].y === head.y) {
+return true;
+}
+}
+return false;
+}// Handle user input
+function handleInput(event) {
+  switch (event.key) {
+    case 'ArrowUp':
+      if (direction.y !== GRID_SIZE) {
+        direction = {x: 0, y: -GRID_SIZE};
+      }
+      break;
+    case 'ArrowDown':
+      if (direction.y !== -GRID_SIZE) {
+        direction = {x: 0, y: GRID_SIZE};
+      }
+      break;
+    case 'ArrowLeft':
+      if (direction.x !== GRID_SIZE) {
+        direction = {x: -GRID_SIZE, y: 0};
+      }
+      break;
+    case 'ArrowRight':
+      if (direction.x !== -GRID_SIZE) {
+        direction = {x: GRID_SIZE, y: 0};
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+// Attach event listener for keydown event
+document.addEventListener('keydown', handleInput);
+
+// Initialize game
+initGame();
+</script>
+</body>
+</html>
